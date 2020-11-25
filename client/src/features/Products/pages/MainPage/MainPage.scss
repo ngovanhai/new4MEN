@@ -1,0 +1,10 @@
+.main {
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 14px;
+    &__title {
+        margin-top: 20px;
+        font-size: 40px;
+        font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+        font-weight: bold;
+    }
+}

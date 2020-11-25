@@ -1,0 +1,32 @@
+.Dialog {
+    &mainSlider {
+        position: relative;
+    }
+    &__btnAdd {
+        color: white;
+        width: 60px;
+        height: 60px;
+        background-color: #d6644a !important;
+        border-radius: 50% !important;
+        border: 1px solid #d6644a !important;
+    }
+    &__btnAdd :hover &__btnAdd {
+        width: 2000px;
+    }
+    &__iconAdd {
+        border: 0px;
+        color: aliceblue;
+    }
+}
+.dialog__image {
+    max-width: 200px;
+    max-height: 300px;
+    margin-left: 30%;
+}
+.MuiPaper-root.MuiDialog-paper.MuiDialog-paperScrollPaper.MuiDialog-paperWidthSm.MuiPaper-elevation24.MuiPaper-rounded {
+    max-width: 1200px;
+    max-height: 800px;
+}
+.Dialog__btnAdd.MuiButton-outlinedPrimary {
+    border: 0px solid;
+}

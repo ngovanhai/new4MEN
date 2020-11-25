@@ -1,0 +1,80 @@
+.fixNav {
+    position: -webkit-sticky;
+    position: sticky;
+    z-index: 1;
+    top: 0;
+}
+.navbar {
+    height: 60px;
+    background-color: #292929;
+    width: 100%;
+    position: relative;
+    // left: 50%;
+}
+.items {
+    color: white;
+    display: flex;
+}
+.phone {
+    color: white;
+    margin-top: 10px;
+    float: left;
+}
+.gioithieu {
+    float: right; // margin-left: 35%;
+}
+ul li {
+    list-style: none;
+}
+.submenu {
+    display: flex;
+    margin-top: 20px;
+}
+.ItemMenu {
+    font-family: Tahoma, Verdana, Arial, sans-serif !important;
+    font-size: 14px !important;
+}
+.CartSearch {
+}
+ul > li {
+    font-size: 18px;
+    margin-left: 10px;
+    margin-top: 10px;
+    color: #444;
+}
+.labelMenu {
+    color: white;
+    &:hover {
+        color: white;
+    }
+}
+.labelNavbar {
+    color: #444;
+    &:active {
+        color: #444;
+    }
+    &:hover {
+        color: #444;
+    }
+}
+.menu {
+    background-color: white;
+}
+.phone {
+    font-size: 14px;
+}
+.toggle {
+    display: none;
+}
+@media (max-width: 720px) {
+    .navbar {
+        display: none;
+    }
+    .submenu1 {
+        display: none;
+    }
+    .submenu {
+        display: inline;
+        transition: all;
+    }
+}

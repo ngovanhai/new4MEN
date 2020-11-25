@@ -1,0 +1,23 @@
+.Preview {
+    display: flex;
+    &__delete {
+        position: absolute;
+        font-size: 50px !important;
+        background-color: white;
+        color: red;
+        border-radius: 50%;
+        background-size: cover;
+        margin-left: -40px;
+    }
+    &__img {
+        margin-top: 30px;
+        float: left;
+        border-radius: 5px;
+        margin-right: 1rem;
+        margin-top: 1rem;
+        max-width: 10rem;
+        max-height: 10rem;
+        min-width: 10rem;
+        min-height: 10rem;
+    }
+}

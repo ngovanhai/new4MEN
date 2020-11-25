@@ -1,0 +1,10 @@
+.slick {
+    width: 100vw !important;
+    position: relative !important;
+    margin-left: -50vw !important;
+    left: 50% !important;
+    &__img {
+        max-width: 100%;
+        min-width: 100%;
+    }
+}

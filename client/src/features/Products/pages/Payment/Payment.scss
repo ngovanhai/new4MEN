@@ -1,0 +1,20 @@
+.Payment {
+    text-align: left;
+    font-size: 14px;
+    &__brumbs {
+        background-color: #ededed;
+        height: 50px;
+        margin-bottom: 30px;
+        position: relative;
+    }
+    &__brumsitem {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        width: 50%;
+        height: 40%;
+        margin: auto;
+    }
+}

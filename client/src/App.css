@@ -1,0 +1,16 @@
+.App {
+  font-family: Arial, Helvetica, sans-serif;
+  text-align: center;
+  font-size: 14px;
+  color: #444;
+  display: inline;
+  border: 0px;
+  padding: 0px;
+}
+
+button:focus {
+  outline: 0px !important;
+}
+html {
+  scroll-behavior: smooth;
+}

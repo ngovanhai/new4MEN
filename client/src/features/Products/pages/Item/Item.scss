@@ -1,0 +1,81 @@
+.GroupProduct {
+    text-align: left;
+    margin-top: 10px;
+    &__brumb {
+        background-color: #ededed;
+        height: 50px;
+        margin-bottom: 30px;
+        position: relative;
+        margin-top: 40px;
+    }
+    &__brumbsitem {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        width: 50%;
+        height: 40%;
+        margin: auto;
+    }
+    &__image {
+        max-width: 100%;
+    }
+    &__option {
+        display: flex;
+    }
+    &__select {
+        width: 100%;
+        margin-right: 10px;
+    }
+    &__buy {
+        background-color: #d6644a !important;
+    }
+    &__Address {
+        margin: 10px 0;
+        background-color: #ededed;
+    }
+    &__AddressItem {
+        margin-left: 30px;
+    }
+
+    &__description {
+        border: 0.1px solid #ccc;
+        padding: 10px;
+        margin: 10px;
+        h3 {
+            text-align: center;
+        }
+    }
+    &__so {
+        display: inline-block;
+        padding: 5px 10px;
+        line-height: 15px;
+        color: #fff;
+        background: #000;
+        border-radius: 3px;
+        margin: 1px;
+        margin-right: 5px;
+    }
+    &__endow {
+        margin-top: 17px;
+        background-color: #ededed;
+    }
+    &__line {
+        height: 50%;
+        border-bottom: 1px solid #ccc;
+    }
+
+    li {
+        margin: 5px 15px;
+        list-style: none;
+        display: list-item;
+        text-align: -webkit-match-parent;
+    }
+    &__btnAdd {
+        margin-left: 0px;
+    }
+}
+.css-g1d714-ValueContainer {
+    background-color: #ededed;
+}

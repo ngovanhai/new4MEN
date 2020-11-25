@@ -1,0 +1,11 @@
+.ItemCartPayment {
+    margin-top: 10px;
+    &__image {
+        max-width: 100px;
+        max-height: 90px;
+    }
+    &__line {
+        margin-top: 10px;
+        border-bottom: 1px solid #ccc;
+    }
+}
