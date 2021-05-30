@@ -27,10 +27,6 @@ function Login(props) {
         const { name, value } = e.target;
         setUser({ ...user, [name]: value })
     }
-    const test = async () => {
-        const a = await userApi.test();
-        console.log(a);
-    }
     const onSubmit = async () => {
         try {
             const token = await userApi.login({ ...user })
@@ -47,20 +43,19 @@ function Login(props) {
         <body>
             <div className="Login">
                 <div className=" w3l-login-form">
-                    <h2>Login Here</h2>
-                    <Button onClick={test}> test</Button>
+                    <h2>Login Admin</h2>
                     <form onSubmit={handleSubmit(onSubmit)}>
                         <div className=" w3l-form-group">
-                            <label>Username:</label>
+                            <label style={{ color: "black" }}>Email:</label>
                             <div className="group">
                                 <i className="fas fa-user" />
-                                <input name="email" type="email" onChange={onChangeInput} className="form-control" placeholder="Username" required="required" ref={register({
+                                <input name="email" type="email" onChange={onChangeInput} className="form-control" placeholder="Email" required="required" ref={register({
                                     validate: value => value !== "admin" || "Nice try!"
                                 })} />
                             </div>
                         </div>
                         <div className=" w3l-form-group">
-                            <label>Password:</label>
+                            <label style={{ color: "black" }}>Password:</label>
                             <div className="group">
                                 <i className="fas fa-unlock" />
                                 <input name="password" type="password" onChange={onChangeInput} className="form-control" placeholder="Password" required="required"
@@ -72,7 +67,6 @@ function Login(props) {
                         </div>
                         <div className="forgot">
                             <a href="#">Forgot Password?</a>
-                            <p><input type="checkbox" />Remember Me</p>
                         </div>
                         <button className="btnSubmit" type="submit">Login</button>
                     </form>

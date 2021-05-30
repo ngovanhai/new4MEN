@@ -27,8 +27,7 @@ app.use('/api', require('./routers/testRouter'))
 
 
 
-//connect to mongodb
-
+// connect to mongodb
 const URI = process.env.MONGODB_URL
 mongoose.connect(URI, {
     useCreateIndex: true,

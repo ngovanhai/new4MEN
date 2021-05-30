@@ -217,7 +217,7 @@ function AddEditProducts(props) {
                                 inputRef={register({
                                     required: "This input is required.",
                                 })}
-                                label="Gía sản phẩm"
+                                label="Giá sản phẩm"
                                 margin="normal"
                                 variant="outlined"
                                 fullWidth
@@ -250,7 +250,6 @@ function AddEditProducts(props) {
                             />
                             {/* <Button type="submit">{loading ? <Roller /> : "Thêm sản phẩm"} </Button> */}
                             <Button type="submit">{isAddmode ? (loadingAdd ? <Roller /> : "Thêm sản phẩm") : (loadingAdd ? <Roller /> : 'Sửa sản phẩm')} </Button>
-                            <div>{loading ? "true" : "false"}</div>
                         </form>
                     </Grid>
                 </Grid>

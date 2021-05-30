@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles, TableCell, TableRow } from '@material-ui/core';
 import { Button } from 'antd';
+import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 
 ItemListProduct.propTypes = {
 
@@ -53,11 +54,11 @@ function ItemListProduct({ row, OnClickEdit, OnClickRemove }) {
                 <Button
                     onClick={handleEdit}
                     loading={loading1}
-                >Edit</Button>
+                ><EditOutlined /></Button>
                 <Button
                     onClick={handleRemove}
                     loading={loading2}
-                >Remove</Button>
+                ><DeleteOutlined /></Button>
             </TableCell>
         </TableRow>
     );

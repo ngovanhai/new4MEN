@@ -45,6 +45,7 @@ p.w3l-register-p {
     display: flex;
     padding: 15px 5px;
     background-color: #ffffff;
+    align-items: center;
 }
 
 .group i {
@@ -185,5 +186,9 @@ footer {
         display: block;
     }
 }
-
+form {
+    background: #fff;
+    padding: 30px;
+    border-radius: 10px;
+}
 /*-- /responsive design --*/
