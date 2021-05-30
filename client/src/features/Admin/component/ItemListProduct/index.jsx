@@ -23,6 +23,7 @@ function ItemListProduct({ row, OnClickEdit, OnClickRemove }) {
     const classes = useStyles();
     const [loading1, setLoading1] = useState(false);
     const [loading2, setLoading2] = useState(false);
+    // álkd
     const handleEdit = () => {
         setLoading1(true);
         setTimeout(() => {
