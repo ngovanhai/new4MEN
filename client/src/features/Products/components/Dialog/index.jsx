@@ -112,7 +112,7 @@ function FormDialog(props) {
                                     {
                                         images.map((image, index) => (
                                             <div key={index}>
-                                                <img src={image.url} alt="" className="dialog__image imageview" />
+                                                <img src={image.url} alt="" className="dialog__image imageview" style={{ maxHeight: "320px" }} />
                                             </div>
                                         ))
                                     }

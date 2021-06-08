@@ -4,7 +4,7 @@ import Slider from "react-slick";
 import ProductCard from '../Product';
 import Products from 'features/Products';
 import { Container } from '@material-ui/core';
-
+import './Selling.scss';
 Selling.propTypes = {
 
 };
@@ -19,7 +19,7 @@ function Selling(props) {
         slidesToScroll: 1,
         autoplay: true,
         speed: 1500,
-        autoplaySpeed: 1500,
+        autoplaySpeed: 2000,
         cssEase: "linear",
         responsive: [
             {
@@ -39,16 +39,18 @@ function Selling(props) {
     };
     return (
         <Container>
-            <Slider {...settings}>
-                {products.map((product) => (
-                    <ProductCard
-                        product={product}
-                        onProductView={onProductView}
-                        onAddToCartClick={onAddToCartClick}
-                        onPayment={onPayment}
-                    />
-                ))}
-            </Slider>
+            <div className="selling">
+                <Slider {...settings} >
+                    {products.map((product) => (
+                        <ProductCard
+                            product={product}
+                            onProductView={onProductView}
+                            onAddToCartClick={onAddToCartClick}
+                            onPayment={onPayment}
+                        />
+                    ))}
+                </Slider>
+            </div>
         </Container>
     );
 }

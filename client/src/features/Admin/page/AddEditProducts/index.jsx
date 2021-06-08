@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 
 import { useParams } from 'react-router-dom';
 import { useForm, Controller } from 'react-hook-form';
-import { Container, Select, TextField, TextareaAutosize, MenuItem, makeStyles, Button, Grid } from "@material-ui/core";
+import { Container, TextField, TextareaAutosize, MenuItem, makeStyles, Grid } from "@material-ui/core";
 
 import * as yup from 'yup';
 import { useDispatch, useSelector } from "react-redux";
@@ -15,7 +15,8 @@ import userApi from "api/useAPI";
 import axios from "axios";
 import PreviewImage from "features/Admin/component/previewImage";
 import { AddToItem } from "features/Admin/itemSlice";
-
+import { Input, Button, Form, Select, Card } from "antd";
+const { Option } = Select;
 AddEditProducts.propTypes = {
 
 };
@@ -32,33 +33,31 @@ const options = [
     { value: "giay-dep", label: "Giày dép" }
 ];
 
+
 function AddEditProducts(props) {
     const classes = useStyles()
-    const ValidationSchema = yup.object().shape({
-        tittle: yup.string().required('this field is required'),
-        mota: yup.string().required('this field is required'),
-        gia: yup.string().required('this field is required'),
-        soluong: yup.string().required('this field is required')
-    });
-
     const { productId } = useParams();
     const [data, setData] = useState([]);
     const dispatch = useDispatch();
+    const [loadingd, setLoadingd] = useState(false);
     const [loading, setLoading] = useState(false);
     const [loadingAdd, setLoadingAdd] = useState(false)
     const isAddmode = !productId;
-    const { handleSubmit, register, control, errors } = useForm({
-        validationSchema: ValidationSchema
-    });
-
-    const [urlImage, setUrlImage] = useState([])
-    const [mota, setMota] = useState()
-    const handleTextArea = (e) => {
-        const { value } = e.target;
-        setMota(value)
-    }
-    const product = useSelector(state => state.item)
-
+    const [urlImage, setUrlImage] = useState([]);
+    const layout = {
+        labelCol: {
+            span: 6
+        },
+        wrapperCol: {
+            span: 18
+        }
+    };
+    const tailLayout = {
+        wrapperCol: {
+            offset: 6,
+            span: 18
+        }
+    };
 
 
     const handlePreview = async (e) => {
@@ -96,38 +95,36 @@ function AddEditProducts(props) {
             alert(err.message)
         }
     }
-    const fetchProductsList = async () => {
-        try {
-            const response = await productApi.getAll();
-            dispatch(AddToProduct(response));
+    // const fetchProductsList = async () => {
+    //     try {
+    //         const response = await productApi.getAll();
+    //         dispatch(AddToProduct(response));
 
-        } catch (err) {
-            console.log('failed to fetch product list :')
-        }
-    }
+    //     } catch (err) {
+    //         console.log('failed to fetch product list :')
+    //     }
+    // }
     const onSubmit = values => {
         if (urlImage.length === 0) {
             alert("xin mời chọn ảnh")
             return
         }
-        let data = { ...values, image: urlImage, mota: mota, "product_id": Math.trunc(Math.random() * 1000) };
+        let data = { ...values, image: urlImage, "product_id": Math.trunc(Math.random() * 1000) };
         const addProduct = async () => {
             setLoadingAdd(true)
             await productApi.create(data)
-            setLoadingAdd(false)
+            setLoadingAdd(false);
             alert("Thêm sản phẩm thành công")
         }
         addProduct();
-
-        fetchProductsList();
-
+        //  fetchProductsList();
     }
     const onUpdate = values => {
         if (urlImage.length === 0) {
             alert("xin mời chọn ảnh")
             return
         }
-        const data = { ...values, image: urlImage, mota: mota };
+        const data = { ...values, image: urlImage };
         const updateProduct = async () => {
             setLoadingAdd(true)
             await productApi.update(productId, data)
@@ -135,7 +132,7 @@ function AddEditProducts(props) {
             alert("sủa sản phẩm thành công")
         }
         updateProduct()
-        fetchProductsList()
+        // fetchProductsList()
     }
     const handleRemove = async (id) => {
         await userApi.deleteImage({ public_id: id })
@@ -145,116 +142,151 @@ function AddEditProducts(props) {
     useEffect(() => {
         const getProduct = async () => {
             const res = await productApi.get(productId)
-            setData(res)
+            setUrlImage(res.image)
+            setData(res);
+            setLoadingd(false);
         }
         getProduct()
     }, [])
-    console.log(data.phanloi);
+    const onFinish = (values) => {
+        if (isAddmode) {
+            onSubmit(values)
+        } else {
+            onUpdate(values)
+        }
+    };
+    const onFinishFailed = (errorInfo) => {
+        console.log("Failed:", errorInfo);
+    };
+
     return (
-        <div className="AddEditProduct">
-            <Container fixed>
-                <div className="AddEditProduct__content">
-                    <h1>{isAddmode ? "Thêm sản phẩm" : data.tittle}</h1>
-                </div>
-                <Grid container spacing={0}>
-                    <Grid item xs={5} >
-                        <div className="AddEditProduct__upload">
-                            <input type="file" className="AddEditProduct__input" multiple onChange={handlePreview}></input>
-                            <Grid container xs={2} className="AddEditProduct__show">
-                                {loading ? <Roller /> : (
-                                    urlImage.map(image => (
-                                        <PreviewImage
-                                            loading={loading}
-                                            url={image.url}
-                                            id={image.public_id}
-                                            onClickRemove={handleRemove}
-                                        />)
-                                    )
-                                )}
-                            </Grid>
-                        </div>
-                    </Grid>
-                    <Grid item xs={5} >
-                        <form className={classes.formControl} onSubmit={handleSubmit(isAddmode ? onSubmit : onUpdate)}>
-                            <TextField
-                                name="tittle"
-                                inputRef={register({
-                                    required: "This input is required.",
-                                })}
-                                label="Tên sản phẩm"
-                                margin="normal"
-                                variant="outlined"
-                                fullWidth
-                                error={errors.tittle ? true : false}
-                            />
-                            <TextareaAutosize
-                                className="AddEditProduct__description"
-                                placeholder="mô tả sản phẩm"
-                                name="mota"
-                                multiline
-                                defaultValue={isAddmode ? "" : data.mota}
-                                rows={10}
-                                rowsMax={5}
-                                inputRef={register}
-                                onChange={handleTextArea}
-                                error={errors.mota ? true : false}
-                            />
-                            <Controller
-                                as={
-                                    <Select>
-                                        <MenuItem value="DEFAULT">Please select a category</MenuItem>
-                                        {options.map(category => (
-                                            <MenuItem value={category.value}>{category.label}</MenuItem>
-                                        ))}
+        <Card className="AddEditProduct">
+            {((isAddmode == false && Object.keys(data).length !== 0) || (isAddmode == true)) && (
+                <Container >
+                    <div className="AddEditProduct__content">
+                        <h1>{isAddmode ? "Thêm sản phẩm" : data.tittle}</h1>
+                    </div>
+                    <Grid container spacing={0}>
+                        <Grid item xs={3} >
+                            <div className="AddEditProduct__upload">
+                                <input type="file" className="AddEditProduct__input" multiple onChange={handlePreview}></input>
+                                <Grid container xs={2} className="AddEditProduct__show">
+                                    {loading ? <Roller /> : (
+                                        urlImage.map(image => (
+                                            <PreviewImage
+                                                loading={loading}
+                                                url={image.url}
+                                                id={image.public_id}
+                                                onClickRemove={handleRemove}
+                                            />)
+                                        )
+                                    )}
+                                </Grid>
+                            </div>
+                        </Grid>
+                        <Grid item xs={9} style={{}}>
+                            <Form
+                                {...layout}
+                                name="basic"
+                                initialValues={{
+                                    tittle: isAddmode ? "" : data.tittle,
+                                    mota: isAddmode ? "" : data.mota,
+                                    gia: isAddmode ? "" : data.gia,
+                                    soluong: isAddmode ? "" : data.soluong,
+                                    sale: isAddmode ? "" : data.sale,
+                                    phanloai: isAddmode ? "" : data.phanloai,
+                                }}
+                                onFinish={onFinish}
+                                onFinishFailed={onFinishFailed}
+                            >
+                                <Form.Item
+                                    label="Tên sản phẩm"
+                                    name="tittle"
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message: "Vui lòng nhập tên sản phẩm!"
+                                        }
+                                    ]}
+                                >
+                                    <Input
+                                    />
+                                </Form.Item>
+                                <Form.Item
+                                    label="Phân loại"
+                                    name="phanloai"
+                                >
+                                    <Select >
+                                        <Option value="quan-nam">Quần nam</Option>
+                                        <Option value="phu-kien">Phụ kiện</Option>
+                                        <Option value="giay-dep">Giày dép</Option>
                                     </Select>
-                                }
-                                name="phanloai"
-                                className="AddEditProduct__category"
-                                control={control}
-                            />
-                            <TextField
-                                name="gia"
-                                inputRef={register({
-                                    required: "This input is required.",
-                                })}
-                                label="Giá sản phẩm"
-                                margin="normal"
-                                variant="outlined"
-                                fullWidth
-                                type="number"
-                                error={errors.gia ? true : false}
-                            />
-                            <TextField
-                                name="soluong"
-                                inputRef={register({
-                                    required: "This input is required.",
-                                })}
-                                label="Số lượng nhập"
-                                margin="normal"
-                                variant="outlined"
-                                fullWidth
-                                type="number"
-                                error={errors.amount ? true : false}
-                            />
-                            <TextField
-                                name="sale"
-                                inputRef={register({
-                                    required: "This input is required.",
-                                })}
-                                label="Khuyến mại"
-                                margin="normal"
-                                variant="outlined"
-                                fullWidth
-                                type="number"
-                                error={errors.sale ? true : false}
-                            />
-                            {/* <Button type="submit">{loading ? <Roller /> : "Thêm sản phẩm"} </Button> */}
-                            <Button type="submit">{isAddmode ? (loadingAdd ? <Roller /> : "Thêm sản phẩm") : (loadingAdd ? <Roller /> : 'Sửa sản phẩm')} </Button>
-                        </form>
+                                </Form.Item>
+                                <Form.Item
+                                    label="Mô tả sản phẩm"
+                                    name="mota"
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message: "Vui lòng nhập mô tả sản phẩm !"
+                                        }
+                                    ]}
+                                >
+                                    <Input.TextArea
+                                        rows={4}
+                                    />
+                                </Form.Item>
+
+                                <Form.Item
+                                    label="Giá sản phẩm"
+                                    name="gia"
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message: "Vui lòng nhập Giá sản phẩm!"
+                                        }
+                                    ]}
+                                >
+                                    <Input type="number">
+
+                                    </Input>
+                                </Form.Item>
+                                <Form.Item
+                                    label="Số lượng"
+                                    name="soluong"
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message: "Vui lòng nhập số lượng!"
+                                        }
+                                    ]}
+                                >
+                                    <Input type="number" />
+                                </Form.Item>
+                                <Form.Item
+                                    label="Khuyến mãi"
+                                    name="sale"
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message: "Vui lòng nhập số khuyến mãi !"
+                                        }
+                                    ]}
+                                >
+                                    <Input type="number" />
+                                </Form.Item>
+
+                                <Form.Item {...tailLayout}>
+                                    <Button type="primary" htmlType="submit" loading={loadingAdd}>
+                                        {isAddmode ? "Thêm sản phẩm" : "Sửa sản phẩm"}
+                                    </Button>
+                                </Form.Item>
+                            </Form>
+                        </Grid>
                     </Grid>
-                </Grid>
-            </Container>
-        </div >
+                </Container>
+            )}
+        </Card >
     );
 }
 

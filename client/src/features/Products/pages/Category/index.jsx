@@ -1,16 +1,18 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useHistory, useParams, useRouteMatch } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { addProductToCart } from 'features/Cart/cartSlice';
-
-import { Container, Grid } from '@material-ui/core';
-
+import { Container, Grid, TablePagination } from '@material-ui/core';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 import { Breadcrumb } from 'antd';
 import { makeStyles } from '@material-ui/core/styles';
 import ProductCard from 'features/Products/components/Product';
 import "./Category.scss";
+import Pagination from '@material-ui/lab/Pagination';
 import Content from 'features/Products/components/Content';
+import productApi from 'api/productsAPI';
+import Loading from 'component/Loading/Loading';
+import { AddToFilterProducts } from 'features/Products/productSlice';
 
 Category.propTypes = {
 
@@ -23,44 +25,16 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function Category(props) {
-
-    const products = useSelector(state => state.products);
+    const products = useSelector(state => state.products.filterProducts);
     const { category } = useParams();
     const dispatch = useDispatch();
     const history = useHistory();
-    const newProduct = [...products];
-    let brums = "";
-    let filterData;
+    const [loading, setLoading] = useState(false)
+    const [page, setPage] = useState(1)
+    const [brums, setBrums] = useState("")
+    const [categories, setCategories] = useState("");
+    const [count, setCount] = useState(0);
 
-    if (category === "moi-nhat") {
-        brums = "Mới Nhất";
-        filterData = newProduct.sort((a, b) => {
-            return b.createdAt.localeCompare(a.createdAt);
-        });
-    }
-    else if (category === "khuyen-mai") {
-        brums = "Khuyến Mãi";
-        filterData = newProduct.filter(
-            product => product.sale !== 0
-        )
-    }
-    else {
-        switch (category) {
-            case "quan-nam":
-                brums = "Quần Nam";
-                break;
-            case "thatlung":
-                brums = "Phụ Kiện";
-                break;
-            case "giay":
-                brums = "Giày Dép Nam"
-            default:
-                break;
-        }
-        filterData = newProduct.filter(
-            product => product.phanloai === category,
-        );
-    }
 
     function handleClickAddCart(product) {
         return new Promise(resolve => {
@@ -92,7 +66,55 @@ function Category(props) {
         })
 
     }
-
+    function handleChangePage(event, value) {
+        setPage(value)
+    }
+    const fetchData = async () => {
+        if (category !== "search") {
+            setLoading(true)
+            let res = await productApi.getAll(page, category)
+            const action = AddToFilterProducts(res.products);
+            dispatch(action);
+            setLoading(false)
+        }
+    }
+    useEffect(() => {
+        fetchData()
+    }, [page])
+    useEffect(() => {
+        setCategories(category)
+    }, [category])
+    useEffect(() => {
+        switch (categories) {
+            case "quan-nam":
+                setBrums("Quần Nam");
+                break;
+            case "thatlung":
+                setBrums("Phụ Kiện");
+                break;
+            case "giay-dep":
+                setBrums("Giày Dép Nam");
+                break;
+            case "phu-kien":
+                setBrums("Phụ kiện");
+                break;
+            case "moi-nhat":
+                setBrums("Mới nhất");
+                break;
+            case "khuyen-mai":
+                setBrums("khuyến mãi");
+                break;
+            case "search":
+                setBrums("Tìm Kiếm");
+                break;
+            default:
+                break;
+        }
+        fetchData()
+    }, [categories])
+    useEffect(() => {
+        fetchData()
+    }, [])
     return (
         <div className="GroupProduct">
             <Breadcrumb className=" GroupProduct__brumb">
@@ -105,35 +127,34 @@ function Category(props) {
             </Breadcrumb>
             <Container fixed>
                 <p className="GroupProduct__nameGroup"><strong>{brums}</strong></p>
-                <h3 className="GroupProduct__filter" >lọc sản phẩm : </h3>
                 <Grid container spacing={3}>
-                    <Grid item xs={12} md={4}>
-                        <p className="GroupProduct__CartList"><ArrowForwardIosIcon className="GroupProduct__icon" />Quần áo nam</p>
-                        <p className="GroupProduct__CartList"><ArrowForwardIosIcon className="GroupProduct__icon" />Túi xách nam</p>
-                        <p className="GroupProduct__CartList"><ArrowForwardIosIcon className="GroupProduct__icon" />Thời Trang hot nhất</p>
-
-                    </Grid>
-                    <Grid item xs={12} md={4}>
-                        <p className="GroupProduct__CartList"><ArrowForwardIosIcon className="GroupProduct__icon" />Túi xách nam</p>
-                        <p className="GroupProduct__CartList"><ArrowForwardIosIcon className="GroupProduct__icon" />Thời Trang hot nhất</p>
-                    </Grid>
                 </Grid>
-                <div className="GroupProduct__line"></div>
+
                 <div className="GroupProduct__ProductList">
                     <Grid container spacing={3}>
                         <Grid item xs={12} md={9}>
-                            <Grid container spacing={3}>
-                                {filterData.map((product, index) => (
-                                    <Grid key={index} item xs={12} md={6} lg={4}>
-                                        <ProductCard
-                                            product={product}
-                                            onAddToCartClick={handleClickAddCart}
-                                            onProductView={handleClickView}
-                                            onPayment={handleCLickPayment}
-                                        />
-                                    </Grid>
-                                ))}
-                            </Grid>
+                            {loading === false && (
+                                <Grid container spacing={3}>
+                                    {products.map((product, index) => (
+                                        <Grid key={index} item xs={12} md={6} lg={4}>
+                                            <ProductCard
+                                                product={product}
+                                                onAddToCartClick={handleClickAddCart}
+                                                onProductView={handleClickView}
+                                                onPayment={handleCLickPayment}
+                                            />
+                                        </Grid>
+                                    ))}
+                                </Grid>
+                            )}
+                            {loading === true && (
+                                <Grid container spacing={3}>
+                                    <Loading></Loading>
+                                </Grid>
+                            )}
+                            <div style={{ display: "flex", justifyContent: "center" }}>
+                                <Pagination count={count} onChange={handleChangePage} variant="outlined" shape="rounded" size="small" />
+                            </div>
                         </Grid>
                         <Grid item xs={0} md={3}>
                             <Content
@@ -142,7 +163,11 @@ function Category(props) {
                         </Grid>
                     </Grid>
                 </div>
+
+
+
             </Container>
+
         </div >
     );
 }

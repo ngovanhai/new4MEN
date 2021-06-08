@@ -29,11 +29,11 @@ function Categoris(props) {
                         </Link>
                     </Grid>
                     <Grid item xs={6} className="categoris__itemCategory">
-                        <Link to="/category/thatlung" > <img src="https://4menshop.com/images/thumbs/slides/slide-2-trang-chu-slide-2.png?t=" alt="" className="categoris__phukien" /></Link>
-                        <Link to="/category/giay" > <img src="https://4menshop.com/images/thumbs/slides/slide-3-trang-chu-slide-3.png?t=" alt="" className="categoris__giay" /></Link>
+                        <Link to="/category/phu-kien" > <img src="https://4menshop.com/images/thumbs/slides/slide-2-trang-chu-slide-2.png?t=" alt="" className="categoris__phukien" /></Link>
+                        <Link to="/category/giay-dep" > <img src="https://4menshop.com/images/thumbs/slides/slide-3-trang-chu-slide-3.png?t=" alt="" className="categoris__giay" /></Link>
                     </Grid>
                     <Grid item xs={3} className="categoris__itemCategory">
-                        <Link to="/category/quan" > <img src="https://4menshop.com/images/thumbs/slides/slide-4-trang-chu-slide-4.png?t=" alt="" className="categoris__quan" /></Link>
+                        <Link to="/category/quan-nam" > <img src="https://4menshop.com/images/thumbs/slides/slide-4-trang-chu-slide-4.png?t=" alt="" className="categoris__quan" /></Link>
                     </Grid>
                 </Grid>
             </div>

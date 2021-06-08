@@ -3,8 +3,8 @@ const jwt = require('jsonwebtoken');
 const auth = (req, res, next) => {
     try {
         const token = req.header('Authorization')
-        if (!token) return res.json({ msg: "Invalid AuAuthorization" })
-
+        console.log(token)
+        if (!token) return res.status(400).json({ msg: "Invalid AuAuthorization" })
         jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
             if (err) return res.json({ msg: "Invalid AuAuthorization" })
             req.user = user

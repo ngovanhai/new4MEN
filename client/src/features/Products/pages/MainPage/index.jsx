@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -16,6 +16,8 @@ import Categoris from 'features/Products/components/categoris';
 
 import Selling from 'features/Products/components/Selling';
 import './MainPage.scss';
+import productApi from 'api/productsAPI';
+import { AddToProduct } from 'features/Products/productSlice';
 
 
 
@@ -33,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
 
 function MainPage(props) {
     const classes = useStyles()
-    const products = useSelector(state => state.products);
+    const products = useSelector(state => state.products.allProducts);
     const dispatch = useDispatch();
     const history = useHistory();
     let ProductNew = [...products];
@@ -62,6 +64,19 @@ function MainPage(props) {
 
     }
 
+    useEffect(() => {
+        const fetchProductsList = async () => {
+            try {
+                const response = await productApi.getAll();
+                dispatch(AddToProduct(response.products));
+            } catch (err) {
+                console.log('failed to fetch product list :')
+            }
+        }
+        fetchProductsList();
+    }, []);
+
+
     const handleClickView = (product) => {
         const urlView = `/4MEN/${product._id}`;
         history.push(urlView);
@@ -73,7 +88,7 @@ function MainPage(props) {
     }
 
     return (
-        <div >
+        <div>
             <Carousels></Carousels>
             <Container fixed className="main">
                 <div className="main__hot">

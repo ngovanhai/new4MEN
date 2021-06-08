@@ -4,8 +4,6 @@ const mongose = require('mongoose')
 const cartOderSchema = new mongose.Schema({
     name: {
         type: String,
-        unique: true
-
     },
     idOder: {
         type: Number,

@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button, TableCell, TableRow } from '@material-ui/core';
+import { TableCell, TableRow } from '@material-ui/core';
 import ItemProducts from '../ItemProduct';
+import { Button } from 'antd';
 
 TableOder.propTypes = {
 
@@ -10,7 +11,7 @@ TableOder.propTypes = {
 
 
 function TableOder(props) {
-    const { row, check } = props
+    const { row, check, loading } = props
     const handleCheck = () => {
         check(row.idOder)
     }
@@ -19,15 +20,24 @@ function TableOder(props) {
             <TableCell component="th" scope="row">
                 {row.name}
             </TableCell>
-            <TableCell align="right">{row.address}</TableCell>
-            <TableCell align="right">
+            <TableCell align="left">{row.address}</TableCell>
+            <TableCell align="left">
                 <ItemProducts
                     products={row.oder}
                 />
             </TableCell>
-            <TableCell align="right">{(row.check) ? "co" : "chua"}</TableCell>
-            <TableCell align="right">{row.total}</TableCell>
-            <TableCell align="right" onClick={handleCheck}><Button>{(row.check) ? "hủy" : "duyệt đơn"} </Button></TableCell>
+            <TableCell align="left">{row.total}</TableCell>
+            {row.check && (
+                <TableCell align="left" onClick={handleCheck}>
+                    <Button type="primary" loading={loading}> Đã duyệt
+             </Button></TableCell>
+            )}
+            {row.check == false && (
+                <TableCell align="left" onClick={handleCheck}>
+                    <Button loading={loading}> Chưa duyệt
+             </Button></TableCell>
+            )}
+
         </TableRow>
     );
 }

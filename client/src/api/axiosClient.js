@@ -3,7 +3,6 @@ import queryString from 'query-string';
 
 
 
-
 const axiosClient = axios.create({
     baseURL: process.env.REACT_APP_API_URL,
     headers: {
@@ -17,8 +16,6 @@ axiosClient.interceptors.request.use(async (config) => {
         const a = JSON.parse(localStorage.getItem("token"))
         config.headers.Authorization = a.accesstoken;
     }
-
-
     return config;
 })
 axiosClient.interceptors.response.use((response) => {

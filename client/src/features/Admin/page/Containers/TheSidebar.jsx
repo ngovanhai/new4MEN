@@ -18,6 +18,7 @@ import {
     CSidebarNavDropdown,
     CSidebarNavItem,
 } from '@coreui/react'
+import logo from "asset/image/logo.png"
 
 import navigation from './_nav'
 
@@ -31,23 +32,11 @@ function TheSidebar(props) {
 
     return (
         <CSidebar
-        // show={show}
-        // onShowChange={(val) => dispatch({type: 'set', sidebarShow: val })}
         >
             <CSidebarBrand className="d-md-down-none" to="/">
-                <CIcon
-                    className="c-sidebar-brand-full"
-                    name="logo-negative"
-                    height={35}
-                />
-                <CIcon
-                    className="c-sidebar-brand-minimized"
-                    name="sygnet"
-                    height={35}
-                />
+                <img src={logo} alt="" style={{ width: "100%", height: "120px", background: "#fff", padding: "20px" }} />
             </CSidebarBrand>
             <CSidebarNav>
-
                 <CCreateElement
                     items={navigation}
                     components={{

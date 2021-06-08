@@ -1,7 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit';
 const initalState = {
     "isAdmin": false,
-    "accesstoken": ""
+    "accesstoken": "",
+    "user":{}
 };
 
 
@@ -11,6 +12,9 @@ const auth = createSlice({
     reducers: {
         admin: (state, action) => {
             state.isAdmin = action.payload.isAdmin
+        },
+        addToUser : (state,action) => {
+            state.user = action.payload
         }
 
     }
@@ -18,5 +22,5 @@ const auth = createSlice({
 });
 
 const { reducer, actions } = auth;
-export const { rf_token, admin } = actions;
+export const { rf_token, admin,addToUser } = actions;
 export default reducer;

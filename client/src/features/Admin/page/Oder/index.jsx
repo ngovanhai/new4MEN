@@ -9,7 +9,10 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import oderApi from 'api/oderApi';
 import TableOder from 'features/Admin/component/tableOder';
-
+import { addProductToCart } from 'features/Cart/cartSlice';
+import { TableFooter, TablePagination } from '@material-ui/core';
+import { useDispatch, useSelector } from 'react-redux';
+import { AddToOder } from 'features/Admin/oderSlice';
 
 
 
@@ -28,49 +31,83 @@ const useStyles = makeStyles({
 
 function Oder(props) {
     const classes = useStyles();
-    const [oder, setOder] = useState([])
+    const [loading, setLoading] = useState(false)
+    const [page, setPage] = useState(0);
+    const [rowsPerpage, setRowsPerPage] = useState(10);
+    const dispatch = useDispatch();
+    const oders = useSelector(state => state.oder);
     const getOder = async () => {
-        const productOder = await oderApi.getAll();
-        productOder.sort((a, b) => {
+        const productOder = await oderApi.getAll(page + 1, rowsPerpage);
+        productOder.order.sort((a, b) => {
             return b.createdAt.localeCompare(a.createdAt);
         });
-        setOder(productOder)
+        const action = AddToOder(productOder)
+        dispatch(action);
     }
 
-    const check = (idOder, check) => {
-        const checkApi = async () => {
-            await oderApi.updateOder(idOder)
+    const check = async (idOder) => {
+        const res = await oderApi.updateOder(idOder);
+        if (res.status == true) {
+            getOder()
         }
-        checkApi()
-        getOder()
     }
-
+    const handleChangePage = (event, newPage) => {
+        setPage(newPage);
+    };
+    const handleChangeRowsPerPage = (event) => {
+        setRowsPerPage(parseInt(event.target.value, 10));
+        setPage(0);
+    };
     useEffect(() => {
         getOder()
+    }, [page, rowsPerpage])
+    useEffect(() => {
+        if (oders.order.length == 0) {
+            getOder()
+        }
     }, [])
+
     return (
         <TableContainer component={Paper}>
-            <Table className={classes.table} aria-label="simple table">
-                <TableHead>
-                    <TableRow>
-                        <TableCell>Tên khách hàng</TableCell>
-                        <TableCell align="right">Địa chỉ</TableCell>
-                        <TableCell align="right">Đơn hàng</TableCell>
-                        <TableCell align="right">Check</TableCell>
-                        <TableCell align="right">Tổng Tiền</TableCell>
-                        <TableCell align="right">Duyệt đơn</TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {oder.map((row) => (
-                        <TableOder
-                            row={row}
-                            check={check}
-                        />
+            {
+                oders.order.length !== 0 && (
+                    <Table className={classes.table} aria-label="simple table">
+                        <TableHead>
+                            <TableRow>
+                                <TableCell>Tên khách hàng</TableCell>
+                                <TableCell align="left">Địa chỉ</TableCell>
+                                <TableCell align="left">Đơn hàng</TableCell>
+                                <TableCell align="left">Tổng Tiền</TableCell>
+                                <TableCell align="left">Duyệt đơn</TableCell>
+                            </TableRow>
+                        </TableHead>
 
-                    ))}
-                </TableBody>
-            </Table>
+                        <TableBody>
+                            {oders.order.map((row) => (
+                                <TableOder
+                                    row={row}
+                                    check={check}
+                                    loading={loading}
+                                />
+
+                            ))}
+                        </TableBody>
+
+                        <TableFooter>
+                            <TableRow>
+                                <TablePagination
+                                    rowsPerPageOptions={[10, 15, 30]}
+                                    count={oders.totalOder}
+                                    rowsPerPage={rowsPerpage}
+                                    page={page}
+                                    onChangePage={handleChangePage}
+                                    onChangeRowsPerPage={handleChangeRowsPerPage}
+                                />
+                            </TableRow>
+                        </TableFooter>
+                    </Table>
+                )
+            }
         </TableContainer>
     );
 }

@@ -5,12 +5,16 @@ const userApi = {
         const url = 'user/login';
         return axiosClient.post(url, user);
     },
+    register: (user) => {
+        const url = 'user/register';
+        return axiosClient.post(url, user);
+    },
     refresh_token: (token) => {
         const url = `user/refresh_token`;
         return axiosClient.post(url, token);
     },
     getUser: () => {
-        const url = `user/info`;
+        const url = `user/infor`;
         return axiosClient.get(url)
     },
     update: (id) => {
@@ -24,6 +28,10 @@ const userApi = {
     deleteImage: (public_id) => {
         const url = 'api/destroy';
         return axiosClient.post(url, public_id)
+    },
+    getAllUser : () =>{
+        const url = 'user/allUser';
+        return axiosClient.get(url)
     }
 }
 

@@ -14,10 +14,13 @@ function ItemProducts(props) {
     return (
         <div>
             {itemProducts.map(x => (
-                <div>
-                    <img src={x.image[0].url} alt="" style={{ maxWidth: 100 }} />
-                    <p>{x.tittle}</p>
-                    <p>size : {x.size} số lượng : {x.slmua}</p>
+                <div style={{ display: "flex", padding: "10px" }}>
+                    <img src={x.image[0].url} alt="" style={{ maxWidth: "70px" }} />
+                    <div style={{ marginLeft: "20px", display: "grid" }}>
+                        <p >{x.tittle}</p>
+                        <p style={{ float: "left" }}>Size : {x.size} </p>
+                        <p >Số lượng : {x.slmua}</p>
+                    </div>
                 </div>
 
             ))}

@@ -14,8 +14,8 @@ function PreviewImage(props) {
         onClickRemove(id)
     }
     return (
-        
-        <Grid item xs={5}> <span><HighlightOffIcon className="Preview__delete" onClick={remove} /></span>
+
+        <Grid item xs={6}> <span><HighlightOffIcon className="Preview__delete" onClick={remove} /></span>
             <img src={url}
                 className="Preview__img"
                 alt="" />

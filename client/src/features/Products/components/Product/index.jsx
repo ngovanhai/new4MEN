@@ -19,10 +19,9 @@ function ProductCard(props) {
         if (onProductView)
             onProductView(product)
     }
-
     return (
         <div className="product">
-            <img src={product.image[0].url} alt="" />
+            <img src={product.image[0].url} alt="" onClick={handleCLickView} />
             <Button className="product__title" onClick={handleCLickView}>{product.tittle}</Button>
             <p className="product__price">{product.gia.toLocaleString()} Vnđ</p>
             <div className="product__overlay">

@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { makeStyles, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@material-ui/core';
+import { makeStyles, Paper, Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TablePagination, TableRow } from '@material-ui/core';
 import ItemListProduct from '../ItemListProduct';
 import { useDispatch, useSelector } from 'react-redux';
 import { AddToProduct, DeleteProduct } from 'features/Products/productSlice'
@@ -21,30 +21,31 @@ const useStyles = makeStyles({
 
 
 function TableListProducts(props) {
+    const { page, rowsPerPage, setPage, setRowsPerPage, sort, category, products, setProducts, totalProducts, fetchData } = props;
 
     const classes = useStyles();
     const dispatch = useDispatch();
     const history = useHistory();
-    const products = useSelector(state => state.products)
-
 
     const HandleRemoveProduct = (product) => {
         const ProductId = product._id
+        setProducts(products.filter(product => product._id !== ProductId))
+
         const action = DeleteProduct(ProductId);
         dispatch(action);
     }
-    const HandleEditProduct = (product) => {
+    const HandleEditProduct = async (product) => {
         const productId = product._id;
-        console.log(productId);
         history.push("/addedit/" + productId);
     }
-    useEffect(() => {
-        const getProducts = async () => {
-            const res = await productApi.getAll()
-            dispatch(AddToProduct(res))
-        }
-        getProducts();
-    }, [])
+    const handleChangePage = async (event, newPage) => {
+        setPage(newPage)
+    };
+
+    const handleChangeRowsPerPage = async (event) => {
+        setRowsPerPage(parseInt(event.target.value, 10));
+        setPage(0);
+    };
     return (
         <TableContainer component={Paper}>
             <Table className={classes.table} aria-label="simple table">
@@ -55,10 +56,10 @@ function TableListProducts(props) {
                             Tên Sản Phẩm
                         </TableCell>
                         <TableCell align="left">Mô Tả</TableCell>
-                        <TableCell align="right">Category</TableCell>
+                        <TableCell align="right" >Category</TableCell>
                         <TableCell align="right">Giá</TableCell>
                         <TableCell align="right">Số lượng</TableCell>
-                        <TableCell align="center">Action</TableCell>
+                        <TableCell align="center">Hành động</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -71,6 +72,18 @@ function TableListProducts(props) {
                         />
                     ))}
                 </TableBody>
+                <TableFooter>
+                    <TableRow>
+                        <TablePagination
+                            rowsPerPageOptions={[10, 15, 30]}
+                            count={totalProducts}
+                            rowsPerPage={rowsPerPage}
+                            page={page}
+                            onChangePage={handleChangePage}
+                            onChangeRowsPerPage={handleChangeRowsPerPage}
+                        />
+                    </TableRow>
+                </TableFooter>
             </Table>
         </TableContainer>
     );

@@ -54,8 +54,8 @@ function FormPay(props) {
     return (
         <div className="FormPay">
             <form onSubmit={handleSubmit(onSubmit)}>
-                <h1>Giá Bán : {product.gia}</h1>
-                <h3 name="price">Giá Gốc : {product.gia}</h3>
+                <h1>Giá Bán : {product.gia.toLocaleString()} VnĐ</h1>
+                <h3 name="price">Giá Gốc : {product.gia.toLocaleString()} VnĐ</h3>
                 <h4>Tình Trạng : còn hàng</h4>
                 <hr />
                 <InputLabel id="demo-simple-select-label">Size</InputLabel>

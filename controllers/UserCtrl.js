@@ -7,10 +7,9 @@ const userCtrl = {
     register: async (req, res) => {
         try {
             const { name, email, password } = req.body;
-
             const user = await Users.findOne({ email })
             if (user) return res.status(400).json({ msg: "The email already exists." })
-
+            console.log("password",password);
             if (password.length < 6)
                 return res.status(400).json({ msg: "Password is at least 6 characters long." })
 
@@ -21,8 +20,8 @@ const userCtrl = {
             })
 
             // Save mongodb
-            await newUser.save()
-
+           // await newUser.save()
+            
             // Then create jsonwebtoken to authentication
             const accesstoken = createAccessToken({ id: newUser._id })
             const refreshtoken = createRefreshToken({ id: newUser._id })
@@ -32,9 +31,7 @@ const userCtrl = {
                 path: '/user/refresh_token',
                 maxAge: 7 * 24 * 60 * 60 * 1000 // 7d
             })
-
             res.json({ accesstoken })
-
         } catch (err) {
             return res.status(500).json({ msg: err.message })
         }
@@ -57,10 +54,7 @@ const userCtrl = {
                 path: '/user/refresh_token',
                 maxAge: 7 * 24 * 60 * 60 * 1000 // 7d
             })
-
-
-            res.json({ accesstoken, refreshtoken })
-
+            res.json({ accesstoken })
         } catch (err) {
             return res.status(500).json({ msg: err.message })
         }
@@ -75,7 +69,7 @@ const userCtrl = {
     },
     refreshToken: (req, res) => {
         try {
-            const rf_token = req.body.refreshtoken;
+            const rf_token = req.cookies.refreshtoken;
             if (!rf_token) return res.status(400).json({ msg: "not cookies" })
 
             jwt.verify(rf_token, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
@@ -95,12 +89,47 @@ const userCtrl = {
         try {
             const user = await Users.findById(req.user.id)
             if (!user) return res.status(400).json({ msg: "user does not exits" })
-            console.log(user)
+            res.json(user)
+        } catch (err) {
+            return res.status(500).json({ msg: err.message })
+        }
+    },
+    getAllUser: async (req,res) =>{
+        try {
+            const users = await Users.find()
+            res.status(200).json(users)
+        } catch (err) {
+            return res.status(500).json({ msg: err.message })
+        }
+    },
+    removeUser: async (req,res) =>{
+        try {
+            await Users.findByIdAndDelete(req.params.id)
+            res.json({ msg: "Deleted a Product" })
+        } catch (err) {
+            return res.status(500).json({ msg: "loi" })
+        }
+    },
+    updateUser :async (req,res) =>{
+        try {
+            const { name,email,role } = req.body;
+            await Users.findOneAndUpdate({ _id: req.params.id }, {
+                name,email,role
+            })
+            res.status(200).json({ msg: "Updated a User" })
+        } catch (err) {
+            return res.status(500).json({ msg: err.message })
+        }
+    },
+    getOneUser: async (req,res) =>{
+        try {
+            const user = await Users.findById(req.params.id)
             res.json(user)
         } catch (err) {
             return res.status(500).json({ msg: err.message })
         }
     }
+
 }
 
 

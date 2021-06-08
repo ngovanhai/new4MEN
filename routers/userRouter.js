@@ -8,9 +8,14 @@ router.post('/login', userCtrl.login)
 
 router.get('/logout', userCtrl.logout)
 
-router.post('/refresh_token', userCtrl.refreshToken)
+router.get('/refresh_token', userCtrl.refreshToken)
 
-router.get('/info', auth, userCtrl.getUser)
+router.get('/infor', auth, userCtrl.getUser)
 
+router.get('/allUser', auth, userCtrl.getAllUser)
 
+router.route('/user/:id')
+    .get(userCtrl.getOneUser)
+    .delete(userCtrl.removeUser)
+    .put(userCtrl.updateUser)
 module.exports = router;

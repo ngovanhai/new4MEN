@@ -1,5 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit';
-const initalState = [];
+const initalState = {
+    order : [],
+    totalOder : 0
+};
 
 
 const oder = createSlice({
@@ -7,13 +10,14 @@ const oder = createSlice({
     initialState: initalState,
     reducers: {
         AddToOder: (state, action) => {
-            state.push(action.payload)
+            state.order = (action.payload.order)
+            state.totalOder = action.payload.countFullOrder
         },
         DeleteOder: (state, action) => {
             console.log("hello", action);
         },
-
-    }
+        
+    }  
 
 });
 

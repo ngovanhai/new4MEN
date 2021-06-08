@@ -7,6 +7,6 @@ router.route('/oder')
     .get(oderCtrl.getOder)
     .post(oderCtrl.createOder)
 router.route('/oder/:id')
-    .put(auth, authAdmin, oderCtrl.updateCheck)
+    .put(oderCtrl.updateCheck)
 
 module.exports = router

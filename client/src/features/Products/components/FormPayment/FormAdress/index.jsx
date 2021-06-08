@@ -1,94 +1,72 @@
 import React from 'react';
 
 import { Controller, useForm } from 'react-hook-form';
-import { Button } from '@material-ui/core';
-import { Input, Form, Row, Col } from 'antd';
+
+import { Input, Form, Row, Col, Button } from 'antd';
 import './FormAdress.scss';
 import ItemCartPayment from '../../ItemCartPayment';
 import { useDispatch, useSelector } from 'react-redux';
 import { DeleteProductToCart, deleteAllCart } from 'features/Cart/cartSlice';
 import oderApi from 'api/oderApi';
+import { object } from 'yup';
 
-
+const layout = {
+    labelCol: {
+        span: 8
+    },
+    wrapperCol: {
+        span: 16
+    }
+};
+const tailLayout = {
+    wrapperCol: {
+        offset: 8,
+        span: 16
+    }
+};
 
 function FormAdress(props) {
 
 
-    const { control, register, handleSubmit, setValue } = useForm(
-    );
+    const { control, register, handleSubmit, setValue } = useForm();
 
     const products = useSelector(state => state.cart);
     const dispatch = useDispatch();
 
     const oder = { ...products }
-    const onSubmit = (values) => {
-        if (Object.keys(values).length !== 4) {
-            alert("Nhập đầy đủ thông tin")
-            return
+    const onFinish = (values) => {
+        if (Object.keys(oder).length == 0) {
+            alert("Không có sản phẩm trong rỏ hàng của bạn");
+            return;
         }
+        const oders = {
+            oder, ...values, "idOder": Math.trunc(Math.random() * 1000), "check": false, "total": num()
+        }
+        const createOder = async () => {
+            const a = await oderApi.createOder(oders);
+        }
+        createOder();
+        const actionDeleteCart = deleteAllCart();
+        dispatch(actionDeleteCart);
+    };
+
+    const onFinishFailed = (errorInfo) => {
+        console.log("Failed:", errorInfo);
+    };
+    const onSubmit = (values) => {
         const oders = {
             oder, ...values, "idOder": Math.trunc(Math.random() * 1000), "check": false, "total": num()
         }
         const createOder = async () => {
             await oderApi.createOder(oders)
         }
-        console.log(oders);
         createOder();
         const actionDeleteCart = deleteAllCart(0);
         dispatch(actionDeleteCart);
     }
     const handleChangeInformation = (e) => {
         const { name, value } = e.target.value;
-        console.log(name, value);
     }
-    const NameInput = (
-        <Form.Item>
-            <Input
-                className="FormAdress__input"
-                type="text"
-                placeholder=""
-                onChange={e => setValue("name", e.target.value, true)}
-                onBlur={e => setValue("name", e.target.value, true)}
-                ref={register}
-            />
-        </Form.Item>
-    )
-    const EmailInput = (
-        <Form.Item>
-            <Input
-                className="FormAdress__input"
-                type="email"
-                placeholder=""
-                onChange={e => setValue("email", e.target.value, true)}
-                onBlur={e => setValue("email", e.target.value, true)}
-                ref={register}
-            />
-        </Form.Item>
-    )
-    const PhoneInput = (
-        <Form.Item>
-            <Input
-                className="FormAdress__input"
-                type="text"
-                placeholder=""
-                onChange={e => setValue("phone", e.target.value, true)}
-                onBlur={e => setValue("phone", e.target.value, true)}
-                ref={register}
-            />
-        </Form.Item>
-    )
-    const AdressInput = (
-        <Form.Item>
-            <Input
-                className="FormAdress__input"
-                type="text"
-                placeholder=""
-                onChange={e => setValue("address", e.target.value, true)}
-                onBlur={e => setValue("address", e.target.value, true)}
-                ref={register}
-            />
-        </Form.Item>
-    )
 
     const num = () => {
         let gia;
@@ -105,108 +83,98 @@ function FormAdress(props) {
         const action = DeleteProductToCart(deleteItemCartId);
         dispatch(action);
     }
+
     return (
-        <Row className="FormPayment">
-            <Col span={12} xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 12 }}>
-                <div className="FormPayment__FormAdress">
-                    <form onSubmit={handleSubmit(onSubmit)}>
-                        <div className="FormPayment__FormAdress__title">Thông tin giao hàng liên hệ</div>
-                        <div className="FormPayment__FormAdress__line"></div>
-                        <Row>
-                            <Col span={10} className="FormPayment__FormAdress__label">Họ và tên *</Col>
-                            <Col span={14} offset={0}>
-                                <Controller
-                                    as={NameInput}
-                                    name="name"
-                                    onChange={handleChangeInformation}
-                                    control={control}
-                                    defaultValue=""
-                                    rules={{
-                                        required: true
-                                    }}
-                                    ref={register}
+        <Row className="FormPayment" gutter={20}>
+            <Col span={12} xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 12 }} >
+                <Form
+                    {...layout}
+                    name="basic"
+                    initialValues={{
+                        remember: true
+                    }}
+                    onFinish={onFinish}
+                    onFinishFailed={onFinishFailed}
+                >
+                    <div className="FormPayment__FormAdress__title">Thông tin giao hàng liên hệ</div>
+                    <div className="FormPayment__FormAdress__line"></div>
+                    <Form.Item
+                        label="Họ và tên"
+                        name="name"
+                        rules={[
+                            {
+                                required: true,
+                                message: "Vui lòng nhập đầy đủ họ và tên !"
+                            }
+                        ]}
+                    >
+                        <Input />
+                    </Form.Item>
+                    <Form.Item
+                        label="Email"
+                        name="email"
+                        rules={[
+                            {
+                                required: true,
+                                message: "Vui lòng nhập đầy đủ Email !"
+                            }
+                        ]}
+                    >
+                        <Input />
+                    </Form.Item>
 
-                                />
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col span={10} className="FormPayment__FormAdress__label">Email*</Col>
-                            <Col span={14} offset={0}>
-                                <Controller
-                                    as={EmailInput}
-                                    name="email"
-                                    control={control}
-                                    defaultValue=""
-                                    rules={{
-                                        required: true
-                                    }}
-                                    onChange={handleChangeInformation}
-                                    ref={register}
+                    <Form.Item
+                        label="Số điện thoại"
+                        name="phone"
+                        rules={[
+                            {
+                                required: true,
+                                message: "Vui lòng nhập đầy đủ số điện thoại!"
+                            }
+                        ]}
+                    >
+                        <Input type="number" maxLength="13" />
+                    </Form.Item>
+                    <Form.Item
+                        label="Địa chỉ giao hàng"
+                        name="address"
+                        rules={[
+                            {
+                                required: true,
+                                message: "Vui lòng nhập đầy đủ địa chỉ giao hàng !"
+                            }
+                        ]}
+                    >
+                        <Input />
+                    </Form.Item>
 
-                                />
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col span={10} className="FormPayment__FormAdress__label">Số điện thoại *</Col>
-                            <Col span={14} offset={0}>
-                                <Controller
-                                    as={PhoneInput}
-                                    onChange={handleChangeInformation}
-                                    name="phone"
-                                    control={control}
-                                    defaultValue=""
-                                    rules={{
-                                        required: true
-                                    }}
-                                    ref={register}
-                                />
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col span={10} className="FormPayment__FormAdress_label"> <p>Địa chỉ giao hàng*</p> </Col>
-                            <Col span={14} offset={0}>
-                                <Controller
-                                    as={AdressInput}
-                                    onChange={handleChangeInformation}
-                                    name="address"
-                                    control={control}
-                                    defaultValue=""
-                                    rules={{
-                                        required: true
-                                    }}
-                                    ref={register}
-                                />
-                            </Col>
-                        </Row>
-                    </form>
-                </div >
+                    <Form.Item {...tailLayout}>
+                        <Button type="primary" htmlType="submit">
+                            Gửi đơn hàng
+                    </Button>
+                    </Form.Item>
+                </Form>
+
             </Col>
             <Col span={12} xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 12 }}>
                 <div className="__FormPayment__FormCart">
-                    <form onSubmit={handleSubmit(onSubmit)}>
-                        <div className="FormPayment__FormAdress__title">Thông tin giao hàng liên hệ</div>
-                        <div className="FormPayment__FormAdress__line"></div>
-                        <Row>
-                            <Col span={4}><strong> Hình ảnh</strong></Col>
-                            <Col span={6}><strong>Tên sản phẩm</strong></Col>
-                            <Col span={4}><strong> Số lượng </strong></Col>
-                            <Col span={4}><strong> Giá</strong></Col>
-                            <Col span={4}><strong> Tổng </strong></Col>
-                            <Col span={2}><strong>Xóa</strong></Col>
-                        </Row>
-                        {products.map((product) => (
-                            <ItemCartPayment
-                                product={product}
-                                onCLickDelete={handleDelete}
-                            />
-                        ))}
-                        < div className="FormPayment__FormAdress__title">Tổng</div>
-                        <div className="FormPayment__FormAdress__line"></div>
-                        <div className="FormPayment__FormAdress__price">
-                            <p>Số tiền mua hàng : {num()} VND</p>
-                        </div>
-                        <Button type="submit" className="FormPayment__FormAdress__oder" >Gửi Đơn Hàng</Button>
-                    </form>
+                    <div className="FormPayment__FormAdress__title">Thông tin đơn hàng</div>
+                    <div className="FormPayment__FormAdress__line"></div>
+                    <Row>
+                        <Col span={4}><strong> Hình ảnh</strong></Col>
+                        <Col span={6}><strong>Tên sản phẩm</strong></Col>
+                        <Col span={4}><strong> Số lượng </strong></Col>
+                        <Col span={4}><strong> Giá</strong></Col>
+                        <Col span={4}><strong> Tổng </strong></Col>
+                        <Col span={2}><strong>Xóa</strong></Col>
+                    </Row>
+                    {products.map((product) => (
+                        <ItemCartPayment
+                            product={product}
+                            onCLickDelete={handleDelete}
+                        />
+                    ))}
+                    < div className="FormPayment__FormAdress__title" style={{ marginTop: "15px" }}>Tổng :<span> {num()} VNĐ</span></div>
                 </div>
 
             </Col>

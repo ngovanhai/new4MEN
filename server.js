@@ -35,7 +35,8 @@ mongoose.connect(URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true
 }, err => {
-    if (err) throw err;
+    if (err) {
+        throw err};
     console.log(("connect to MOngodb"));
 })
 

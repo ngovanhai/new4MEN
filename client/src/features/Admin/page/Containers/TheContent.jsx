@@ -8,6 +8,8 @@ import {
 } from 'react-router-dom'
 import { CContainer, CFade } from '@coreui/react'
 import testOder from 'features/Admin/component/testOder';
+import ManagerUsers from '../ManagerUsers';
+import AddEditUser from '../AddEditUser';
 
 
 
@@ -18,8 +20,6 @@ const Oder = React.lazy(() => import('../Oder'));
 const TestOder = React.lazy(() => import('../../component/testOder'))
 
 const TheContent = () => {
-
-    const match = useRouteMatch();
 
     const loading = (
         <div className="pt-3 text-center">
@@ -33,12 +33,14 @@ const TheContent = () => {
                     <Suspense fallback={loading}>
                         <Switch>
                             <Route path="/admin/oder" name="Home" render={props => <Oder {...props} />} />
-                            <Route path="/admin/dashboard" name="Home" render={props => <Dashboard {...props} />} />
+                            <Route path="/admin/user" name="User" render={props => <ManagerUsers {...props} />} />
+                            <Route path="/addeditUser" name="Home" render={props => <AddEditUser {...props} />} />
+                            <Route path="/addeditUser/:userId" name="Home" render={props => <AddEditUser {...props} />} />
                             <Route path="/admin/product" name="Home" render={props => <ProductAdmin {...props} />} />
                             <Route path="/addedit/:productId" name="Home" render={props => <AddEditProduct {...props} />} />
                             <Route path="/addedit" name="Home" render={props => <AddEditProduct {...props} />} />
                             <Route path="/oder/:oderId" name="Home" render={props => <TestOder {...props} />} />
-                            <Redirect from="/admin" to="/admin/dashboard" />
+                            <Redirect from="/admin" to="/admin/product" />
                         </Switch>
                     </Suspense>
                 </CContainer>

@@ -1,11 +1,6 @@
 export default [
     {
         _tag: 'CSidebarNavItem',
-        name: 'Dashboard',
-        to: '/admin'
-    },
-    {
-        _tag: 'CSidebarNavItem',
         name: 'Quản Lí Sản Phẩm',
         to: '/admin/product'
     },
@@ -14,5 +9,10 @@ export default [
         name: 'Quản Lí Đơn Hàng',
         to: '/admin/oder'
     },
+    // {
+    //     _tag: 'CSidebarNavItem',
+    //     name: 'Quản Lí Tài Khoản',
+    //     to: '/admin/user'
+    // },
 
 ]

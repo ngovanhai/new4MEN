@@ -12,8 +12,6 @@ import userApi from 'api/useAPI';
 
 const Thelayout = (props) => {
     const history = useHistory()
-
-
     useEffect(() => {
         const isLogin = localStorage.getItem('firstLogin')
         if (isLogin === false || isLogin === null) {

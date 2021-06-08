@@ -1,8 +1,8 @@
 import axiosClient from './axiosClient';
 
 const oderApi = {
-    getAll: () => {
-        const url = '/api/oder';
+    getAll: (page,limit) => {
+        const url = `/api/oder?page=${page}&limit=${limit}`;
         return axiosClient.get(url)
     },
     createOder: (cart) => {

@@ -36,7 +36,7 @@ const useStyles = makeStyles({
 })
 
 function Content(props) {
-    const products = useSelector(state => state.products);
+    const products = useSelector(state => state.products.allProducts);
     const { onClickView } = props;
 
     let filterData = [...products];

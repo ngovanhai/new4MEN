@@ -17,6 +17,8 @@ import { AddToProduct } from 'features/Products/productSlice';
 
 import productApi from 'api/productsAPI';
 import userApi from 'api/useAPI';
+import Loading from 'component/Loading/Loading';
+import Register from 'features/Login/Register';
 
 
 
@@ -32,7 +34,6 @@ function App(props) {
   const dispatch = useDispatch();
 
   const refreshToken = async () => {
-
     try {
       const token = localStorage.getItem("token")
       const token_refresh = await userApi.refresh_token(token)
@@ -43,17 +44,6 @@ function App(props) {
     }
   }
 
-  useEffect(() => {
-    const fetchProductsList = async () => {
-      try {
-        const response = await productApi.getAll();
-        dispatch(AddToProduct(response));
-      } catch (err) {
-        console.log('failed to fetch product list :')
-      }
-    }
-    fetchProductsList();
-  }, []);
 
 
   return (
@@ -61,6 +51,7 @@ function App(props) {
       <BrowserRouter>
         <Switch>
           <Route exact path='/login' component={Empty}></Route>
+          <Route exact path='/register' component={Empty}></Route>
           <Route exact path='/admin/' component={Empty}></Route>\
           <Route exact path='/admin/product' component={Empty}></Route>
           <Route exact path='/admin/oder' component={Empty}></Route>
@@ -68,25 +59,34 @@ function App(props) {
           <Route exact path='/admin/dashboard' component={Empty}></Route>
           <Route exact path='/Addedit' component={Empty}></Route>
           <Route exact path='/Addedit/:productId' component={Empty}></Route>
+          <Route exact path='/admin/user' component={Empty}></Route>
+          <Route exact path="/addeditUser" component={Empty} />
+          <Route exact path='/addeditUser/:userId' component={Empty}></Route>
           <Route exact path='' component={Headers}></Route>
         </Switch>
-        <Suspense fallback={<div>Loading ...</div>}>
+        <Suspense fallback={<Loading></Loading>}>
           <Switch>
             <Route exact path='/' component={Products} />
             <Route path='/category/:category' component={Category} />
             <Route path='/4MEN/:productId' component={SelectProduct} />
             <Route path='/thanh-toan' component={Payment} />
             <Route path='/login' component={Login} ></Route>
+            <Route path='/register' component={Register} ></Route>
             <Route path="/admin" name="Home" render={props => <Thelayout {...props} />} />
             <Route path="/addedit" name="addedit" render={props => <Thelayout {...props} />} />
+            <Route path="/addeditUser" name="addeditUser" render={props => <Thelayout {...props} />} />
             <Route component={NotFound} />
           </Switch>
         </Suspense>
         <Switch>
           <Route exact path='/login' component={Empty}></Route>
+          <Route exact path='/register' component={Empty}></Route>
           <Route exact path='/admin/' component={Empty}></Route>
+          <Route exact path='/admin/user' component={Empty}></Route>
           <Route exact path='/admin/product' component={Empty}></Route>
           <Route exact path='/Addedit' component={Empty}></Route>
+          <Route exact path='/addeditUser' component={Empty}></Route>
+          <Route exact path='/addeditUser/:userId' component={Empty}></Route>
           <Route exact path='/Addedit/:productId' component={Empty}></Route>
           <Route exact path='' component={Footer}></Route>
         </Switch>

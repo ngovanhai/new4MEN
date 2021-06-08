@@ -6,7 +6,6 @@
         height: 50px;
         margin-bottom: 30px;
         position: relative;
-        margin-top: 40px;
     }
     &__brumbsitem {
         position: absolute;
@@ -32,6 +31,7 @@
         background-color: #d6644a !important;
     }
     &__Address {
+        padding: 10px;
         margin: 10px 0;
         background-color: #ededed;
     }
